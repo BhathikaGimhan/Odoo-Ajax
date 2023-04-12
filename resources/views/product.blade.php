@@ -29,10 +29,24 @@
     </div>
     <button type="submit" id="create-product-btn">Create</button>
 </form>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Default Code</th>
+            <th>List Price</th>
+            <th>Standard Price</th>
+        </tr>
+    </thead>
+    <tbody id="product-data">
+        <!-- Product data will be loaded here -->
+    </tbody>
+</table>
 <p id="text"></p>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
+        fechData();
         $("#success-message").text("hello");
         // $("#text").text("Your text here");
 
@@ -46,8 +60,11 @@
                 success: function(response) {
                     // Check if the product was created successfully
                     if (response.success) {
+                        fechData();
                         $('#create-product-form').trigger('reset'); // Clear the form inputs
                         $('#text').text(response.success); // Display success message
+
+
                         // console.log(response.success);
                         // alert('success to create product.');
                     } else {
@@ -59,7 +76,34 @@
                 }
             });
         });
+
+        function fechData(){
+        $.ajax({
+            url: '/api/data',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+
+                var names = data.map(function(product) {
+                // return product.name; // extract the name property from each product object
+                console.log(product.name); // Handle the response data
+                var product_data = $('#product-data');
+                // Clear the table body
+                product_data.empty();
+                // Loop through the fetched data and append it to the table
+                $.each(data, function(i, product) {
+                    product_data.append('<tr><td>' + product.name + '</td><td>' + product.default_code + '</td><td>' + product.list_price + '</td><td>' + product.standard_price + '</td></tr>');
+                });
+            });
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.error(errorThrown);
+            }
+        });
+        }
     });
+
+
 </script>
 
 </body>

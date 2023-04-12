@@ -19,6 +19,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 // Define a route to call the "index" method on the "OdooController" class
+Route::get('/api/data', [App\Http\Controllers\OdooController::class, 'fech']);
 Route::get('/index', [App\Http\Controllers\OdooController::class, 'index']);
 Route::get('/create', [OdooController::class, 'create'])->name('odoo.create');
 Route::post('/store', [OdooController::class, 'store'])->name('product.store');
